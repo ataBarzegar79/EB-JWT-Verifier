@@ -11,7 +11,7 @@ def _fail_if_haeder_is_wrong(jwt_header: dict):
         raise HTTPException(status_code=400, detail="Token type is not supported.")
 
 
-def check_header_and_payload(auth_header: str):
+def check_header_and_payload(auth_header: str) -> dict:
     jwt_token = auth_header.split()[1]
     try:
         decoded_token = jwt.decode_complete(jwt_token, options={
@@ -35,3 +35,5 @@ def check_header_and_payload(auth_header: str):
 
     jwt_header = decoded_token.get("header")
     _fail_if_haeder_is_wrong(jwt_header=jwt_header)
+
+    return decoded_token
