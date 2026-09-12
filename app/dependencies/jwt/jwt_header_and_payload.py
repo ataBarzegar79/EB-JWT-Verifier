@@ -18,7 +18,7 @@ def check_header_and_payload(auth_header: str) -> dict:
             "verify_signature": False,
             "verify_exp": True,
             "verify_iat": True,
-            "require": ["exp", "iat", "x5u"],
+            "require": ["exp", "iat", "x5u"],  # todo: add to settings
         })
     except jwt.exceptions.DecodeError:
         raise HTTPException(status_code=400, detail="Token Format is not valid JWT.")
@@ -37,3 +37,5 @@ def check_header_and_payload(auth_header: str) -> dict:
     _fail_if_haeder_is_wrong(jwt_header=jwt_header)
 
     return decoded_token
+
+# todo: move
