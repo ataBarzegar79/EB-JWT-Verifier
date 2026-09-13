@@ -70,7 +70,86 @@ uv run pytest
 ```
 
 
+## Return Samples: 
 
+### sucessful One: 
+```aiignore
+HTTP/1.1 200 OK
+date: Sun, 13 Sep 2026 22:27:15 GMT
+server: uvicorn
+content-length: 16
+content-type: application/json
+
+{"valid":"true"}
+```
+### unsucessful response: 
+```aiignore
+HTTP/1.1 401 Unauthorized
+date: Sun, 13 Sep 2026 22:28:51 GMT
+server: uvicorn
+content-length: 53
+content-type: application/json
+
+{"detail":"Required claim is missing: exp, iat, x5u"}
+```
+```aiignore
+HTTP/1.1 401 Unauthorized
+date: Sun, 13 Sep 2026 22:30:18 GMT
+server: uvicorn
+content-length: 65
+content-type: application/json
+
+{"detail":"The specified x5u Url is not verified in the system."}
+```
+```aiignore
+HTTP/1.1 401 Unauthorized
+date: Sun, 13 Sep 2026 22:31:33 GMT
+server: uvicorn
+content-length: 46
+content-type: application/json
+
+{"detail":"Token algorithm is not supported."}
+```
+```aiignore
+HTTP/1.1 401 Unauthorized
+date: Sun, 13 Sep 2026 22:32:28 GMT
+server: uvicorn
+content-length: 41
+content-type: application/json
+
+{"detail":"Token type is not supported."}
+```
+```aiignore
+HTTP/1.1 401 Unauthorized
+date: Sun, 13 Sep 2026 22:33:33 GMT
+server: uvicorn
+content-length: 65
+content-type: application/json
+
+{"detail":"The specified x5u Url is not verified in the system."}
+```
+```aiignore
+HTTP/1.1 401 Unauthorized
+date: Sun, 13 Sep 2026 22:38:00 GMT
+server: uvicorn
+content-length: 30
+content-type: application/json
+
+{"detail":"iat is in future."}
+```
+```aiignore
+HTTP/1.1 401 Unauthorized
+date: Sun, 13 Sep 2026 22:38:31 GMT
+server: uvicorn
+content-length: 29
+content-type: application/json
+
+{"detail":"exp has expired."}
+
+
+```
+
+and so on. You can find more samples in the exceptions directory.
 ## Architecture
 
 The project comes with a single API. But what it tries to solve is verifying JWT tokens, which might be mandatory to more than one endpoint.
@@ -84,8 +163,13 @@ Therefore, the verification is done through a decorator and depenerdency. With t
 
 ### Security Considerations
 The most important part of the project is the verification of the JWT through provided x5u header. It is important, for instance, an attacker can generate its own public and private keys, and use them to sign a JWT token by 
-putting the public key url in the x5u header. Among different resources, I concluded to solve this problem, by using the white list and also disallowing redirections.
+putting the public key url in the x5u header. Among different resources, I concluded to solve this problem by using the white list and also disallowing redirections.
 Also, alogrithm type is forced by the system, not the user. The white list approach also avoids sending request to our own ip ranges. 
+
+### Error Handling
+Error handling plays a crucial role in the project. the project heavily relies on the fastapi exception handling. 
+With one difference, the project also creates a custom exception on top of the fastapi exception by inheritence, which makes them to use easily in the code and tests. 
+They can be checked inside the exceptions directory.
 
 ### Code Improvements Suggestions
 No code is perfect at the end of the day, for this stage, ther is a need for a setting file to keep the configuration seetings out of the scope of the project. 
