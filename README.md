@@ -45,7 +45,8 @@ X5U_TESTING_CERT value will change based on your machine.
 - for Windows: TBD
 - for Linux: TBD
 
-The other private key in the project can be used to sign the JWT token. Use [JWT IO](www.jwt.io)'s JWT encoder section to generate a JWT token.
+The other private key in the project can be used to sign the JWT token. Use [JWT IO](https://jwt.io)
+'s JWT encoder section to generate a JWT token.
 Or you can generate with tour very own script :) 
 
 Then, everything should be fine, call the API with the JWT token. add it to the Authorization header with the Bearer prefix.
