@@ -3,7 +3,7 @@ import time
 import pytest
 from fastapi import HTTPException
 
-from app.dependencies.jwt.jwt_header_and_payload import check_header_and_payload
+from app.dependencies.jwt.jwt_header_and_payload_verifier import check_header_and_payload
 from tests.dependencies.jwt.factory.jwt_factory import FakeJwtFactory
 
 

@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 import pytest
 
-from app.dependencies.jwt.authorization_header_structure import check_authorization_header_structure
+from app.dependencies.jwt.authorization_header_structure_verifier import check_authorization_header_structure
 
 
 def test_missing_auth_header_fails():
