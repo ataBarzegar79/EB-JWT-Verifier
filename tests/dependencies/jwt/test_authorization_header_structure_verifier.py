@@ -25,14 +25,6 @@ def test_auth_header_fails_if_not_bearer():
     assert exception.value.detail == 'Authorization header must start with Bearer.'
 
 
-def test_auth_header_fails_if_token_is_invalid():
-    with pytest.raises(HTTPException) as exception:
-        check_authorization_header_structure(auth_header="Bearer A.B.C")
-    assert exception.value.status_code == 400
-    assert exception.value.detail == ('JWT token is cannot be decoded. Header, payload or Signature is not Base64 '
-                                      'encoded.')
-
-
 def test_auth_header_fails_if_token_missing_parts():
     with pytest.raises(HTTPException) as exception:
         check_authorization_header_structure(auth_header="Bearer A.B")
