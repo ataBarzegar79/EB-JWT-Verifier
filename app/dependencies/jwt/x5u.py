@@ -45,7 +45,9 @@ def _get_public_key_from_url(url: ParseResult) -> CertificatePublicKeyTypes:
                 stream=True,
             ) as response:
                 response.raise_for_status()
-                raw_content = response.raw.read()
+                if response.is_redirect:
+                    raise X5uURLNotEligibleError()
+                raw_content = response.raw.read(decode_content=True)
 
         public_key = x509.load_pem_x509_certificate(raw_content).public_key()
     except (requests.ConnectionError, requests.Timeout, FileNotFoundError, OSError):
