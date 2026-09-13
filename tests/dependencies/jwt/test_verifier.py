@@ -55,10 +55,13 @@ def test_jwt_verifier_succeeds(_prepare_valid_rsa_key):
 
     fake_request = _prepare_fake_fast_apI_request_object(token=token)
 
-    with patch(
+    with (
+        patch('app.dependencies.jwt.x5u.x5u_allowed_hosts', [header['x5u']]),
+        patch(
             'app.dependencies.jwt.x5u._get_public_key_from_url',
             return_value=public_pem
-    ) as mock_fetch:
+        ) as mock_fetch,
+    ):
         verify_jwt(request=fake_request)
     mock_fetch.assert_called_once()
 
