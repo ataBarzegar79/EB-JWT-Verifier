@@ -25,7 +25,6 @@ def check_header_and_payload(jwt_token: str) -> dict:
             'verify_iat': True,
             'require': ['exp', 'iat'],  # todo: add to settings
         })
-        print(decoded_token)
     except jwt.exceptions.DecodeError:
         raise InvalidJWTTokenFormatError()
     except jwt.exceptions.MissingRequiredClaimError:

@@ -44,7 +44,7 @@ def test_jwt_verifier_succeeds(_prepare_valid_rsa_key):
     header = {
         'alg': 'RS256',
         'typ': 'JWT',
-        # 'x5u': 'https://example.com/certs.pem'
+        'x5u': 'https://example.com/certs.pem'
     }
 
     token = jwt.encode(
