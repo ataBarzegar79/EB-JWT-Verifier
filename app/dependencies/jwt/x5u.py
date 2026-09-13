@@ -11,9 +11,7 @@ from app.dependencies.jwt.exceptions.jwt_exceptions import (
     Invalid509EncodedCertificateError, X5uURLNotEligibleError,
 )
 
-x5u_allowed_hosts = [
-    'https://www.digicert.com/CACerts/DigiCertGlobalRootCA.crt.pem',
-]
+x5u_allowed_hosts = []
 
 if os.getenv("ENVIRONMENT") == "TESTING" and (cert := os.getenv("X5U_TESTING_CERT")):
     x5u_allowed_hosts.append(cert)
