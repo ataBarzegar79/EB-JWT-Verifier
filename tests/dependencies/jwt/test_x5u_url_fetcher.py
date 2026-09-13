@@ -42,7 +42,7 @@ def test_unreachable_url_fails(request_mock, error):
 
 @pytest.mark.parametrize('error', [requests.HTTPError()])
 def test_unseccsful_response_from_the_url_fails(request_mock, error):
-    _, response = request_mock
+    mock, response = request_mock
     response.raise_for_status.side_effect = requests.HTTPError('500 Server Error')
 
     with pytest.raises(HTTPException) as exception:

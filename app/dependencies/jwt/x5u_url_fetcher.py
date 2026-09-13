@@ -1,10 +1,11 @@
 from urllib.parse import ParseResult
 import requests
+from cryptography.hazmat.primitives.asymmetric.types import CertificatePublicKeyTypes
 from fastapi import HTTPException
 from cryptography import x509
 
 
-def get_public_key_from_url(url: ParseResult):
+def get_public_key_from_url(url: ParseResult) -> CertificatePublicKeyTypes:
     try:
         maximum_bytes_allowed = 100000
         # todo: add to settings
@@ -20,4 +21,3 @@ def get_public_key_from_url(url: ParseResult):
     except ValueError:
         raise HTTPException(status_code=502, detail="Specified x5u file is not a valid x509 PEM encoded data.")
     return public_key
-
