@@ -12,13 +12,11 @@ from app.dependencies.jwt.exceptions.jwt_exceptions import (
 )
 
 x5u_allowed_hosts = [
-    "https://www.digicert.com/CACerts/DigiCertGlobalRootCA.crt.pem",
+    'https://www.digicert.com/CACerts/DigiCertGlobalRootCA.crt.pem',
 ]
 
-if os.getenv("ENV") == "TESTING":
-    x5u_allowed_hosts.append(
-        (Path(__file__).parent / "tests" / "fake_files" / "fake_certificate.pem").resolve().as_uri()
-    )
+if os.getenv("ENVIRONMENT") == "TESTING" and (cert := os.getenv("X5U_TESTING_CERT")):
+    x5u_allowed_hosts.append(cert)
 
 
 def veify_x5u_safety_and_get_from_url(x5u: str):
@@ -38,8 +36,7 @@ def _check_x5u_validity_and_safety(x5u) -> ParseResult:
 def _get_public_key_from_url(url: ParseResult) -> CertificatePublicKeyTypes:
     try:
         if url.scheme == "file":
-            with open(url.path, "rb") as f:
-                raw_content = f.read()
+            raw_content = Path.from_uri(url.geturl()).read_bytes()
         else:
             with requests.get(
                 url=url.geturl(),
@@ -59,4 +56,3 @@ def _get_public_key_from_url(url: ParseResult) -> CertificatePublicKeyTypes:
         raise Invalid509EncodedCertificateError()
     return public_key
 
-# todo: handle better the testing environment.
