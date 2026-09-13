@@ -1,11 +1,33 @@
 import time
-
 import pytest
 
-from app.dependencies.jwt.jwt_exceptions import NonJWTTypeError, NotSupportedJWTAlgorithmError, ExpiredSignatureError, \
-    ImmatureIatError, NonNumericIatError, MissingRequiredClaimError, InvalidJWTTokenFormatError
-from app.dependencies.jwt.jwt_header_and_payload_verifier import check_header_and_payload
 from tests.dependencies.jwt.factory.jwt_factory import FakeJwtFactory
+from app.dependencies.jwt.initial_structure_validator import check_header_and_payload, \
+    check_authorization_header_structure
+from app.dependencies.jwt.exceptions.jwt_exceptions import AuthHeaderMissingError, AuthHeaderInvalidFormatError, \
+    AuthHeaderMissingBearerError, AuthHeaderInvalidJWTTokenFormatError, NonJWTTypeError, NotSupportedJWTAlgorithmError, \
+    ExpiredSignatureError, \
+    ImmatureIatError, NonNumericIatError, MissingRequiredClaimError, InvalidJWTTokenFormatError
+
+
+def test_missing_auth_header_fails():
+    with pytest.raises(AuthHeaderMissingError):
+        check_authorization_header_structure(auth_header=None)
+
+
+def test_wrong_structure_for_header_fails():
+    with pytest.raises(AuthHeaderInvalidFormatError):
+        check_authorization_header_structure(auth_header=";ldsf,")
+
+
+def test_auth_header_fails_if_not_bearer():
+    with pytest.raises(AuthHeaderMissingBearerError):
+        check_authorization_header_structure(auth_header="another token")
+
+
+def test_auth_header_fails_if_token_missing_parts():
+    with pytest.raises(AuthHeaderInvalidJWTTokenFormatError):
+        check_authorization_header_structure(auth_header="Bearer A.B")
 
 
 def test_failed_jwt_structure_fails():
