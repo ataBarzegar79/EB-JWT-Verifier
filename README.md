@@ -87,4 +87,8 @@ The most important part of the project is the verification of the JWT through pr
 putting the public key url in the x5u header. Among different resources, I concluded to solve this problem, by using the white list and also disallowing redirections.
 Also, alogrithm type is forced by the system, not the user. The white list approach also avoids sending request to our own ip ranges. 
 
+### Code Improvements Suggestions
+No code is perfect at the end of the day, for this stage, ther is a need for a setting file to keep the configuration seetings out of the scope of the project. 
+Latest changes have reduced the test coverage and more unit tests might be needed. A simple github action might be a good idea to run the tests automatically when making a pull request. 
+
 
