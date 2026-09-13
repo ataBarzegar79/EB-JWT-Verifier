@@ -23,6 +23,7 @@ def _fail_if_header_structure_is_wrong(auth_header: str) -> None:
                                                         'is not Base64 encoded.')
 
 
-def check_authorization_header_structure(auth_header: str | None) -> None:
+def check_authorization_header_structure(auth_header: str | None) -> str:
     _fail_if_header_is_none(auth_header)
     _fail_if_header_structure_is_wrong(auth_header)
+    return auth_header[1]
