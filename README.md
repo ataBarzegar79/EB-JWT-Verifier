@@ -33,21 +33,21 @@ curl -H "Authorization: Bearer <token>" http://localhost:8080/auth
 ```
 
 ### Maunal Testing
-System only downloads certificates from its white list, so the url should explisitly be mentioned by the system itself. Otherwise, there would be 
+System only downloads certificates from its whitelist, so the url should explisitly be mentioned by the system itself. Otherwise, there would be 
 401 error. 
 
 For manual test, as mentioned above, keep your .env accessible to the project. 
-    There is a valid pair of keys on the project, that you can use for test. But it only works if environment variables are set. 
+    There is a valid pair of keys on the project that you can use for test. But it only works if environment variables are set. 
     'ENVIROMENT' should be set to 'TESTING' and 'X5U_TESTING_CERT' should show the path to the certificate in your machine.
 #### X5U_TESTING_CERT Value
 X5U_TESTING_CERT value will change based on your machine.
-- for Docker: put it inside fake files directory in the tests in the project as mentioned in the .env.example file.
+- for Docker: put it inside the fake files directory in the tests in the project as mentioned in the .env.example file.
 - for Windows: TBD
 - for Linux: TBD
 
 The other private key in the project can be used to sign the JWT token. Use [JWT IO](https://jwt.io)
 's JWT encoder section to generate a JWT token.
-Or you can generate with tour very own script :) 
+Or you can generate with your very own script:) 
 
 Then, everything should be fine, call the API with the JWT token. add it to the Authorization header with the Bearer prefix.
 
@@ -159,13 +159,13 @@ Therefore, the verification is done through a decorator and depenerdency. With t
 
 ### Pipeline Explanation
 1. First, general cheks are done, such as the presence of the JWT token, and structure of the JWT. The JWT claimedset is also checked for reuiqred parmeters (e.g. iss, exp).
-2. The X5U header is checked, it is not trusted unless it is in the white list. Also, redirec from a url also fails. 
+2. The X5U header is checked, it is not trusted unless it is in the whitelist. Also, redirec from a url also fails. 
 3. Finally, the JWT is verified against the trusted certificates.
 
 ### Security Considerations
-The most important part of the project is the verification of the JWT through provided x5u header. It is important, for instance, an attacker can generate its own public and private keys, and use them to sign a JWT token by 
-putting the public key url in the x5u header. Among different resources, I concluded to solve this problem by using the white list and also disallowing redirections.
-Also, alogrithm type is forced by the system, not the user. The white list approach also avoids sending request to our own ip ranges. 
+The most important part of the project is the verification of the JWT through the provided x5u header. It is important, for instance, an attacker can generate its own public and private keys, and use them to sign a JWT token by 
+putting the public key url in the x5u header. Among different resources, I concluded to solve this problem by using the whitelist and also disallowing redirections.
+Also, alogrithm type is forced by the system, not the user. The whitelist approach also avoids sending request to our own ip ranges. 
 
 ### Error Handling
 Error handling plays a crucial role in the project. the project heavily relies on the fastapi exception handling. 
@@ -173,7 +173,7 @@ With one difference, the project also creates a custom exception on top of the f
 They can be checked inside the exceptions directory.
 
 ### Code Improvements Suggestions
-No code is perfect at the end of the day, for this stage, ther is a need for a setting file to keep the configuration seetings out of the scope of the project. 
-Latest changes have reduced the test coverage and more unit tests might be needed. A simple github action might be a good idea to run the tests automatically when making a pull request. 
+No code is perfect at the end of the day, for this stage, there is a need for a setting file to keep the configuration seetings out of the scope of the project. 
+The latest changes have reduced the test coverage and more unit tests might be needed. A simple GitHub action might be a good idea to run the tests automatically when making a pull request. 
 
 
