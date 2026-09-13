@@ -1,0 +1,12 @@
+services:
+  api:
+    build: .
+    ports:
+      - "${API_PORT:-8080}:80"
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./app:/code/app
+      - ./tests:/code/tests
+      - ./pyproject.toml:/code/pyproject.toml

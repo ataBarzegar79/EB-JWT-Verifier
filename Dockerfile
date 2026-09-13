@@ -10,7 +10,9 @@ COPY ./requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 
+COPY ./pyproject.toml /code/pyproject.toml
 COPY ./app /code/app
+COPY ./tests /code/tests
 
 
-CMD ["fastapi", "run", "app/main.py", "--port", "80"]
+CMD ["fastapi", "dev", "app/main.py", "--host", "0.0.0.0", "--port", "80"]
