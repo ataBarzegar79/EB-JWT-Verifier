@@ -5,8 +5,9 @@ from urllib.parse import urlparse
 import pytest
 import requests
 from cryptography import x509
-from fastapi import HTTPException
 
+from app.dependencies.jwt.jwt_exceptions import Invalid509EncodedCertificateError, X5UUrlErroredResponseError, \
+    X5UUrlUnreachableError
 from app.dependencies.jwt.x5u_url_fetcher import get_public_key_from_url
 
 fake_url = urlparse('https://www.fakeurl.com/certificate.pem')
@@ -33,11 +34,8 @@ def test_unreachable_url_fails(request_mock, error):
     mock, response = request_mock
     mock.side_effect = error
 
-    with pytest.raises(HTTPException) as exception:
+    with pytest.raises(X5UUrlUnreachableError):
         get_public_key_from_url(fake_url)
-
-    assert exception.value.status_code == 503
-    assert exception.value.detail == 'x5u url is timed out or unreachable.'
 
 
 @pytest.mark.parametrize('error', [requests.HTTPError()])
@@ -45,11 +43,8 @@ def test_unseccsful_response_from_the_url_fails(request_mock, error):
     mock, response = request_mock
     response.raise_for_status.side_effect = requests.HTTPError('500 Server Error')
 
-    with pytest.raises(HTTPException) as exception:
+    with pytest.raises(X5UUrlErroredResponseError):
         get_public_key_from_url(fake_url)
-
-    assert exception.value.status_code == 502
-    assert exception.value.detail == 'Specified x5u url responded with an error.'
 
 
 @pytest.mark.parametrize('error', [ValueError()])
@@ -57,11 +52,8 @@ def test_unseccsful_response_from_the_url_fails(request_mock, error):
     mock, response = request_mock
     response.raw.read.return_value = b'a wrong certificate'
 
-    with pytest.raises(HTTPException) as exception:
+    with pytest.raises(Invalid509EncodedCertificateError):
         get_public_key_from_url(fake_url)
-
-    assert exception.value.status_code == 502
-    assert exception.value.detail == 'Specified x5u file is not a valid x509 PEM encoded data.'
 
 
 def test_valid_certificate_returns_public_key(request_mock):

@@ -1,8 +1,10 @@
 from urllib.parse import ParseResult
 import requests
 from cryptography.hazmat.primitives.asymmetric.types import CertificatePublicKeyTypes
-from fastapi import HTTPException
 from cryptography import x509
+
+from app.dependencies.jwt.jwt_exceptions import X5UUrlUnreachableError, X5UUrlErroredResponseError, \
+    Invalid509EncodedCertificateError
 
 
 def get_public_key_from_url(url: ParseResult) -> CertificatePublicKeyTypes:
@@ -15,9 +17,9 @@ def get_public_key_from_url(url: ParseResult) -> CertificatePublicKeyTypes:
             raw_content = response.raw.read(maximum_bytes_allowed)
         public_key = x509.load_pem_x509_certificate(raw_content).public_key()
     except (requests.ConnectionError, requests.Timeout):
-        raise HTTPException(status_code=503, detail="x5u url is timed out or unreachable.")
+        raise X5UUrlUnreachableError()
     except requests.HTTPError:
-        raise HTTPException(status_code=502, detail="Specified x5u url responded with an error.")
+        raise X5UUrlErroredResponseError()
     except ValueError:
-        raise HTTPException(status_code=502, detail="Specified x5u file is not a valid x509 PEM encoded data.")
+        raise Invalid509EncodedCertificateError()
     return public_key

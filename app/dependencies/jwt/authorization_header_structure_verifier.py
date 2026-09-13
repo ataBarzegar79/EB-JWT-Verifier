@@ -1,22 +1,21 @@
-from fastapi import HTTPException
+from app.dependencies.jwt.jwt_exceptions import AuthHeaderMissingError, AuthHeaderInvalidFormatError, \
+    AuthHeaderMissingBearerError, AuthHeaderInvalidJWTTokenFormatError
 
 
 def _fail_if_header_is_none(auth_header: str | None) -> None:
     if auth_header is None:
-        raise HTTPException(status_code=401, detail='Authorization header is missing')
+        raise AuthHeaderMissingError()
 
 
 def _fail_if_header_structure_is_wrong(auth_header: str) -> None:
     parts = auth_header.split()
     if len(parts) != 2:
-        raise HTTPException(status_code=400, detail='Authorization header must be' + '"Bearer <token>".')
+        raise AuthHeaderInvalidFormatError()
     if parts[0].lower() != "bearer":
-        raise HTTPException(status_code=400, detail='Authorization header must start with Bearer.')
+        raise AuthHeaderMissingBearerError()
     token_parts = parts[1].split(".")
     if len(token_parts) != 3:
-        raise HTTPException(status_code=400, detail='JWT token is cannot be decoded. Make sure it follows the '
-                                                    'structure: header.payload.signature all in base64url encoded '
-                                                    'format.')
+        raise AuthHeaderInvalidJWTTokenFormatError()
 
 
 def check_authorization_header_structure(auth_header: str | None) -> str:
