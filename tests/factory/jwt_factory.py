@@ -8,6 +8,11 @@ class JWTFactoryException(Exception):
 
 
 class FakeJwtFactory:
+    """
+    This file is a fake data generator for jwt.
+
+    """
+
     def __init__(self):
         self.default_headers = {
             "alg": "RS256",

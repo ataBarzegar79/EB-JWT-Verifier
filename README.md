@@ -149,6 +149,15 @@ content-type: application/json
 
 
 ```
+```aiignore
+HTTP/1.1 500 Internal Server Error
+date: Mon, 14 Sep 2026 20:35:30 GMT
+server: uvicorn
+content-length: 48
+content-type: application/json
+
+{"detail":"Unhandled error while verifying JWT"}
+```
 
 and so on. You can find more samples in the exceptions directory.
 ## Architecture
