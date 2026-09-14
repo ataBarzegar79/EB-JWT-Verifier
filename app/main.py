@@ -1,11 +1,13 @@
 import logging
+from pathlib import Path
 
 from fastapi import FastAPI, Depends
 
 from app.dependencies.jwt.verifier import verify_jwt
 
+LOG_DIR = Path(__file__).parent
 logging.basicConfig(
-    filename='logs/app.log',
+    filename=LOG_DIR / 'logs' / 'app.log',
     filemode='a',
     level=logging.ERROR
 )

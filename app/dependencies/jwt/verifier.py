@@ -2,7 +2,7 @@ import logging
 
 import jwt
 from cryptography.hazmat.primitives.asymmetric.types import CertificatePublicKeyTypes
-from fastapi import Request
+from fastapi import Request, HTTPException
 
 from app.config import settings
 from app.dependencies.jwt.exceptions.jwt_exceptions import InvalidJWTSignatureError, NotSupportedJWTAlgorithmError, \
@@ -24,11 +24,14 @@ def verify_jwt(request: Request) -> None:
 
         # verify public key against the jwt token
         _verify_claimed_set_against_public_key(token=jwt_token, public_key=public_key)
+        sad
     except EB401Error:
         raise
     except Exception:
         logger.exception("Unexpected error while verifying JWT")
-        raise UnexpectedJWTDecodingError()
+        raise HTTPException(
+            status_code=500, detail="Unhandled error while verifying JWT"
+        )
 
 
 def _verify_claimed_set_against_public_key(token: str, public_key: CertificatePublicKeyTypes) -> None:
