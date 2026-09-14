@@ -1,6 +1,14 @@
+import logging
+
 from fastapi import FastAPI, Depends
 
 from app.dependencies.jwt.verifier import verify_jwt
+
+logging.basicConfig(
+    filename='logs/app.log',
+    filemode='a',
+    level=logging.ERROR
+)
 
 app = FastAPI()
 

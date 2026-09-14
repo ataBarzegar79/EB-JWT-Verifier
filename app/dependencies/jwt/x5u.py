@@ -13,7 +13,7 @@ from app.dependencies.jwt.exceptions.jwt_exceptions import (
 
 x5u_allowed_hosts = settings.allowed_hosts
 
-if settings.app_environment == 'TESTING' and (cert := settings.test_certificate_url):
+if settings.app_environment == 'TESTING' and (cert := settings.x5u_test_url):
     x5u_allowed_hosts.append(cert)
 
 
