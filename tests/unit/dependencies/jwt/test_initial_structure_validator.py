@@ -1,7 +1,7 @@
 import time
 import pytest
 
-from tests.dependencies.jwt.factory.jwt_factory import FakeJwtFactory
+from tests.factory.jwt_factory import FakeJwtFactory
 from app.dependencies.jwt.initial_structure_validator import check_header_and_payload, \
     check_authorization_header_structure
 from app.dependencies.jwt.exceptions.jwt_exceptions import AuthHeaderMissingError, AuthHeaderInvalidFormatError, \

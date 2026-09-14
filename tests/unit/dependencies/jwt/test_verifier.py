@@ -15,7 +15,7 @@ from app.dependencies.jwt.exceptions.jwt_exceptions import NotSupportedJWTAlgori
 
 @pytest.fixture(scope='module')
 def _prepare_valid_rsa_key() -> tuple[bytes, bytes]:
-    certificates_path = Path(__file__).parent / 'fake_files'
+    certificates_path = Path(__file__).parents[3] / 'fake_files'
     return (
         (certificates_path / 'fake_private.pem').read_bytes(),
         (certificates_path / 'fake_certificate.pem').read_bytes(),
