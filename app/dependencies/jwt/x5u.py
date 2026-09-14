@@ -1,4 +1,3 @@
-import os
 from urllib.parse import urlparse, ParseResult
 from pathlib import Path
 
@@ -6,14 +5,15 @@ import requests
 from cryptography import x509
 from cryptography.hazmat.primitives.asymmetric.types import CertificatePublicKeyTypes
 
+from app.config import settings
 from app.dependencies.jwt.exceptions.jwt_exceptions import (
     X5UNonStringError, X5UUrlUnreachableError, X5UUrlErroredResponseError,
     Invalid509EncodedCertificateError, X5uURLNotEligibleError,
 )
 
-x5u_allowed_hosts = []
+x5u_allowed_hosts = settings.allowed_hosts
 
-if os.getenv("ENVIRONMENT") == "TESTING" and (cert := os.getenv("X5U_TESTING_CERT")):
+if settings.app_environment == 'TESTING' and (cert := settings.x5u_test_url):
     x5u_allowed_hosts.append(cert)
 
 
@@ -33,17 +33,11 @@ def _check_x5u_validity_and_safety(x5u) -> ParseResult:
 
 def _get_public_key_from_url(url: ParseResult) -> CertificatePublicKeyTypes:
     try:
-        if url.scheme == "file":
+        if url.scheme == 'file':
             raw_content = Path.from_uri(url.geturl()).read_bytes()
         else:
-            with requests.get(
-                url=url.geturl(),
-                allow_redirects=False,
-                timeout=(2, 4),
-                stream=True,
-            ) as response:
+            with requests.get(url=url.geturl(), allow_redirects=False, timeout=(2, 4), stream=True) as response:
                 response.raise_for_status()
-                print(response.is_redirect)
                 if response.is_redirect:
                     raise X5uURLNotEligibleError()
                 raw_content = response.raw.read(decode_content=True)
@@ -56,4 +50,3 @@ def _get_public_key_from_url(url: ParseResult) -> CertificatePublicKeyTypes:
     except ValueError:
         raise Invalid509EncodedCertificateError()
     return public_key
-

@@ -26,7 +26,7 @@ def request_mock():
 
 
 def get_fake_certificate():
-    certificates_path = Path(__file__).parent / 'fake_files' / 'fake_certificate.pem'
+    certificates_path = Path(__file__).parents[3] / 'fake_files' / 'fake_certificate.pem'
     with open(certificates_path, 'rb') as f:
         return f.read()
 

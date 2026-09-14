@@ -11,7 +11,7 @@ cp .env.example .env
 
 ## Run
 
-### With Docker (Compose)
+### With Docker (Compose) - RECOMMENDED
 
 ```bash
 docker compose up --build
@@ -40,15 +40,13 @@ For manual test, as mentioned above, keep your .env accessible to the project.
     There is a valid pair of keys on the project that you can use for test. But it only works if environment variables are set. 
     'ENVIROMENT' should be set to 'TESTING' and 'X5U_TESTING_CERT' should show the path to the certificate in your machine.
 #### X5U_TESTING_CERT Value
-X5U_TESTING_CERT value will change based on your machine.
-- for Docker: put it inside the fake files directory in the tests in the project as mentioned in the .env.example file.
-- for Windows: TBD
-- for Linux: TBD
+X5U_TESTING_CERT value will change based on your machine. 
+For Docker, put it inside the fake files directory in the tests in the project as mentioned in the .env.example file. For other machines, search how files can be put as the url form in the env. 
 
 The other private key in the project can be used to sign the JWT token. Use [JWT IO](https://jwt.io)
-'s JWT encoder section to generate a JWT token.
+'s JWT encoder section to generate a JWT token. 
 Or you can generate with your very own script:) 
-
+For the x5u header in the JWT, put the url of the certificate in the whitelist or for testing, what mentioned in the env file. 
 Then, everything should be fine, call the API with the JWT token. add it to the Authorization header with the Bearer prefix.
 
 ### Example
@@ -149,6 +147,15 @@ content-type: application/json
 
 
 ```
+```aiignore
+HTTP/1.1 500 Internal Server Error
+date: Mon, 14 Sep 2026 20:35:30 GMT
+server: uvicorn
+content-length: 48
+content-type: application/json
+
+{"detail":"Unhandled error while verifying JWT"}
+```
 
 and so on. You can find more samples in the exceptions directory.
 ## Architecture
@@ -170,10 +177,8 @@ Also, alogrithm type is forced by the system, not the user. The whitelist approa
 ### Error Handling
 Error handling plays a crucial role in the project. the project heavily relies on the fastapi exception handling. 
 With one difference, the project also creates a custom exception on top of the fastapi exception by inheritence, which makes them to use easily in the code and tests. 
-They can be checked inside the exceptions directory.
+They can be checked inside the exceptions' directory.
 
-### Code Improvements Suggestions
-No code is perfect at the end of the day, for this stage, there is a need for a setting file to keep the configuration seetings out of the scope of the project. 
-The latest changes have reduced the test coverage and more unit tests might be needed. A simple GitHub action might be a good idea to run the tests automatically when making a pull request. 
-
+### Future Improvements
+- More tests can be added. All now are unit tests. But the system is also very small. 
 

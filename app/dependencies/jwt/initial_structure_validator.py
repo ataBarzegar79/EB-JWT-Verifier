@@ -1,5 +1,6 @@
 import jwt
 
+from app.config import settings
 from app.dependencies.jwt.exceptions.jwt_exceptions import AuthHeaderMissingError, AuthHeaderInvalidFormatError, \
     AuthHeaderMissingBearerError, AuthHeaderInvalidJWTTokenFormatError, InvalidJWTTokenFormatError, \
     MissingRequiredClaimError, \
@@ -29,7 +30,7 @@ def check_authorization_header_structure(auth_header: str | None) -> str:
     parts = auth_header.split()
     if len(parts) != 2:
         raise AuthHeaderInvalidFormatError()
-    if parts[0].lower() != "bearer":
+    if parts[0].lower() != 'bearer':
         raise AuthHeaderMissingBearerError()
     token_parts = parts[1].split(".")
     if len(token_parts) != 3:
@@ -44,7 +45,7 @@ def check_header_and_payload(jwt_token: str) -> dict:
             'verify_signature': False,
             'verify_exp': True,
             'verify_iat': True,
-            'require': ['exp', 'iat'],  # todo: add to settings
+            'require': ['exp', 'iat'],
         })
     except jwt.exceptions.DecodeError:
         raise InvalidJWTTokenFormatError()
@@ -59,13 +60,13 @@ def check_header_and_payload(jwt_token: str) -> dict:
     except jwt.exceptions.PyJWTError:
         raise UnexpectedJWTDecodingError()
 
-    jwt_header = decoded_token.get("header")
+    jwt_header = decoded_token.get('header')
     algorithm = jwt_header.get('alg')
     typ = jwt_header.get('typ')
     x5u = jwt_header.get('x5u')
-    if algorithm != 'RS256':
+    if algorithm != settings.allowed_algorithm:
         raise NotSupportedJWTAlgorithmError()
-    if typ != "JWT":
+    if typ != settings.allowed_type:
         raise NonJWTTypeError()
     if x5u is None:
         raise MissingRequiredClaimError()
