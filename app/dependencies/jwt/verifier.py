@@ -24,7 +24,6 @@ def verify_jwt(request: Request) -> None:
 
         # verify public key against the jwt token
         _verify_claimed_set_against_public_key(token=jwt_token, public_key=public_key)
-        sad
     except EB401Error:
         raise
     except Exception:
