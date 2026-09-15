@@ -6,13 +6,15 @@ Verify JWT tokens with JWTVerifier.
 
 ```bash
 cp .env.example .env
+mkdir -p app/logs
+touch app/logs/app.log
 ```
 
 
 ## Run
 
 ### With Docker (Compose) - RECOMMENDED
-
+This file is for development purposes only.
 ```bash
 docker compose up --build
 ```
@@ -34,20 +36,22 @@ curl -H "Authorization: Bearer <token>" http://localhost:8080/auth
 
 ### Maunal Testing
 System only downloads certificates from its whitelist, so the url should explisitly be mentioned by the system itself. Otherwise, there would be 
-401 error. 
+401 error. You can add valid urls to the config.py
 
 For manual test, as mentioned above, keep your .env accessible to the project. 
     There is a valid pair of keys on the project that you can use for test. But it only works if environment variables are set. 
     'ENVIROMENT' should be set to 'TESTING' and 'X5U_TESTING_CERT' should show the path to the certificate in your machine.
 #### X5U_TESTING_CERT Value
-X5U_TESTING_CERT value will change based on your machine. 
-For Docker, put it inside the fake files directory in the tests in the project as mentioned in the .env.example file. For other machines, search how files can be put as the url form in the env. 
+X5U_TESTING_CERT value can be different based on your machine. 
+For Docker, put it inside the fake files directory (as already is, they can be also used) in the tests in the project as mentioned in the .env.example file. 
+    For other machines, search how files can be put as the url form in the env. 
 
-The other private key in the project can be used to sign the JWT token. Use [JWT IO](https://jwt.io)
+The other private key in the project (or your own file) can be used to sign the JWT token. Use [JWT IO](https://jwt.io)
 's JWT encoder section to generate a JWT token. 
 Or you can generate with your very own script:) 
-For the x5u header in the JWT, put the url of the certificate in the whitelist or for testing, what mentioned in the env file. 
-Then, everything should be fine, call the API with the JWT token. add it to the Authorization header with the Bearer prefix.
+
+For the x5u header in the JWT, put the url of the certificate in the whitelist or for testing, what exactly mentioned in the env file. 
+Then, everything should be fine, call the API with the JWT token. Add it to the Authorization header with the Bearer prefix.
 
 ### Example
 ```aiignore
@@ -175,10 +179,8 @@ putting the public key url in the x5u header. Among different resources, I concl
 Also, alogrithm type is forced by the system, not the user. The whitelist approach also avoids sending request to our own ip ranges. 
 
 ### Error Handling
-Error handling plays a crucial role in the project. the project heavily relies on the fastapi exception handling. 
+Error handling plays a crucial role in the project. The project heavily relies on the fastapi exception handling. 
 With one difference, the project also creates a custom exception on top of the fastapi exception by inheritence, which makes them to use easily in the code and tests. 
 They can be checked inside the exceptions' directory.
 
-### Future Improvements
-- More tests can be added. All now are unit tests. But the system is also very small. 
 
