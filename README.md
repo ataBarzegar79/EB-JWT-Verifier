@@ -4,8 +4,6 @@ Verify JWT tokens with JWTVerifier.
 
 ## Setup
 
-## Setup
-
 ```bash
 cp .env.example .env
 mkdir -p app/logs
