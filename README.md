@@ -9,7 +9,13 @@ cp .env.example .env
 mkdir -p app/logs
 touch app/logs/app.log
 ```
+Edit your allowed urls for x5u header, if not yet, skip it (Use in Manual Testing below)
 
+```bash
+# config.py
+
+allowed_hosts: list[str] = []  # new hosts can be addded here.
+```
 
 ## Run
 
